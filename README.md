@@ -11,6 +11,6 @@ Delete Flashcards: Remove flashcards you no longer need.
   Tkinter
 
 **Future Goals:**
-  Rework the deleting system
-  Add a progress bar on the top
-  Add a save feature that can save terms an definitions and users can load them whenever they need it 
+  Rework the deleting system, 
+  add a progress bar on the top, and
+  add a save feature that can save terms and definitions and users can load them whenever they need it 
