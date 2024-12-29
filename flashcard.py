@@ -11,7 +11,7 @@ flashcard_front = ['']  # holds all elements for the front of flashcard
 flashcard_back = ['']  # holds all elements for the back of flashcard
 
 
-def error(text):
+def error(text): # creates error_window to display error messages
     error_window = tk.Tk()
     error_window.geometry("300x300")
     error_window.title("Error")
