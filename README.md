@@ -12,7 +12,7 @@ Progress bar: Displays your current position in the set (Ex: 1/5)
   Tkinter
 
 **Future Improvements:**
-* Rework the deleting system and have the sets automatically update when deleting
+* Rework the deleting system and have the sets automatically update when deleting (Complete)
 * Add a save feature that can save terms and definitions, and users can load them whenever they need it
 * Add a study game/quiz
 * Add a menu to switch through the flashcard sets, study game/quiz, and another window with all saved sets
