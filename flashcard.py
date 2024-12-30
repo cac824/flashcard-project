@@ -11,6 +11,16 @@ flashcard_front = []  # holds all elements for the front of flashcard
 flashcard_back = []  # holds all elements for the back of flashcard
 
 
+def enable_button(button_name):
+    if len(flashcard_front) >= 1:
+        button_name.config(state=tk.NORMAL)
+
+
+def disable_button(button_name):
+    if len(flashcard_front) <= 1:
+        button_name.config(state=tk.DISABLED)
+
+
 def update_label():
     global count
     if len(flashcard_front) > 0:
@@ -81,28 +91,40 @@ def next_card():
     global count, is_flipped
     if count < len(flashcard_front) - 1:
         count += 1
+    if len(flashcard_front) == 0:
+        label2.config(text="No Cards Available")
+        num_label.config(text="0/0")
+    else:
+        label2.config(text=flashcard_front[count])
+        num_label.config(text="{}/{}".format(count + 1, len(flashcard_front)))
     is_flipped = False
-    label2.config(text=flashcard_front[count])
-    num_label.config(text="{}/{}".format(count + 1, len(flashcard_front)))
+    enable_button(prevcard_button)
+    disable_button(nextcard_button)
 
 
 def prev_card():
     global count, is_flipped
     if count > 0:
         count -= 1
+    if len(flashcard_front) == 0:
+        label2.config(text="No Cards Available")
+        num_label.config(text="0/0")
+    else:
+        label2.config(text=flashcard_front[count])
+        num_label.config(text="{}/{}".format(count + 1, len(flashcard_front)))
     is_flipped = False
-    label2.config(text=flashcard_front[count])
-    num_label.config(text="{}/{}".format(count + 1, len(flashcard_front)))
+    enable_button(nextcard_button)
+    disable_button(prevcard_button)
 
 
 def delete_card():
     global count
-    if len(flashcard_front) == 1: # checks if flashcard_front only has one card
+    if len(flashcard_front) == 1:  # checks if flashcard_front only has one card
         flashcard_front.pop(count)
         flashcard_back.pop(count)
         num_label.config(text="0/0")
         label2.config(text="")
-    elif len(flashcard_front) > 1: # checks if flashcard_front has more than one card
+    elif len(flashcard_front) > 1:  # checks if flashcard_front has more than one card
         flashcard_front.pop(count)
         flashcard_back.pop(count)
         if count >= len(flashcard_front):
