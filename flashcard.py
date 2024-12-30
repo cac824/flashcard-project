@@ -7,11 +7,19 @@ count = 0
 is_flipped = False
 first_card_replaced = False
 
-flashcard_front = ['']  # holds all elements for the front of flashcard
-flashcard_back = ['']  # holds all elements for the back of flashcard
+flashcard_front = []  # holds all elements for the front of flashcard
+flashcard_back = []  # holds all elements for the back of flashcard
 
 
-def error(text): # creates error_window to display error messages
+def update_label():
+    global count
+    if len(flashcard_front) > 0:
+        label2.config(text=flashcard_front[count])
+    else:
+        label2.config(text="No Cards Available")
+
+
+def error(text):  # function that makes error messages
     error_window = tk.Tk()
     error_window.geometry("300x300")
     error_window.title("Error")
@@ -27,33 +35,32 @@ def new_flashcard():  # function that makes a new card
     term_label = tk.Label(new_window, text="Term", font='Arial')
     term_label.pack()
 
-    entry = tk.Entry(new_window)
-    entry.pack()
+    term_entry = ttk.Entry(new_window)
+    term_entry.pack()
 
-    definition_label = tk.Label(new_window, text="Definition", font='Arial')
+    definition_label = ttk.Label(new_window, text="Definition", font='Arial')
     definition_label.pack()
 
-    entry2 = tk.Entry(new_window)
-    entry2.pack()
+    definition_entry = ttk.Entry(new_window)
+    definition_entry.pack()
 
     def add_flashcard():  # nested function that adds a new card
         global first_card_replaced
-        term = entry.get()
-        definition = entry2.get()
-        if term and definition:  # checks if term and definition are filled out
-            if not first_card_replaced:  # checks if first_card_replaced is false
-                flashcard_front[0] = term  # sets the first index of flashcard_front and back to term and definition
-                flashcard_back[0] = definition
-                first_card_replaced = True  # sets first_card_replaced as true to stop running this conditional
-            if len(flashcard_front) >= 1 and flashcard_front[0] == term:  # gets rid of duplicates of first term
-                flashcard_front.pop(0)
-                flashcard_back.pop(0)
+        term = term_entry.get()
+        definition = definition_entry.get()
+        if term and definition:  # checks if term and definiton are filled out
+            if not flashcard_front:  # checks if there is flashcard_front is empty
+                flashcard_front.append(term)
+                flashcard_back.append(definition)
+            else:
+                flashcard_front.append(term)
+                flashcard_back.append(definition)
+            update_label()
         else:
             error("Both entries need to be filled out")
-        flashcard_front.append(term)
-        flashcard_back.append(definition)
-        entry.delete(0, tk.END)  # clears the entries after all are filled out and submitted
-        entry2.delete(0, tk.END)
+        term_entry.delete(0, tk.END)  # clears the entries after all are filled out and submitted
+        definition_entry.delete(0, tk.END)
+        num_label.config(text="{}/{}".format(count + 1, len(flashcard_front)))
 
     add_card_button = tk.Button(new_window, text="Add Flashcard", font='Arial', command=add_flashcard)
     add_card_button.pack()
@@ -90,13 +97,20 @@ def prev_card():
 
 def delete_card():
     global count
-    if flashcard_front and flashcard_back:
+    if len(flashcard_front) == 1: # checks if flashcard_front only has one card
         flashcard_front.pop(count)
         flashcard_back.pop(count)
-    if len(flashcard_front) and len(flashcard_back) == 1:
-        flashcard_front[0] = ''
-        flashcard_back[0] = ''
+        num_label.config(text="0/0")
+        label2.config(text="")
+    elif len(flashcard_front) > 1: # checks if flashcard_front has more than one card
+        flashcard_front.pop(count)
+        flashcard_back.pop(count)
+        if count >= len(flashcard_front):
+            count = len(flashcard_front) - 1
+        label2.config(text=flashcard_front[count])
         num_label.config(text="{}/{}".format(count + 1, len(flashcard_front)))
+    else:
+        error("There are no cards to delete")
 
 
 # sets up the window
@@ -112,26 +126,26 @@ num_label.pack()
 card_frame = tk.Frame(window, bg="white", width=500, height=300)
 card_frame.pack(pady=20, padx=20)
 # words that go on the flashcard
-label2 = tk.Label(card_frame, text="{}".format(flashcard_front[count]), bg="white", font=('Arial', "25"))
+label2 = tk.Label(card_frame, text="No Cards Available", bg="white", font=('Arial', "25"))
 label2.pack(pady=50, padx=50)
 # new flashcard button
 button = tk.Button(window, text="New Flashcard", font='Arial', command=new_flashcard)
 button.pack()
 # previous card button
-button2 = tk.Button(window, text="Previous Card", font='Arial', command=prev_card)
-button2.pack()
-button2.place(x=100, y=249)
+prevcard_button = tk.Button(window, text="Previous Card", font='Arial', command=prev_card)
+prevcard_button.pack()
+prevcard_button.place(x=100, y=249)
 # next card button
-button3 = tk.Button(window, text="Next Card", font='Arial', command=next_card)
-button3.pack()
-button3.place(x=575, y=249)
+nextcard_button = tk.Button(window, text="Next Card", font='Arial', command=next_card)
+nextcard_button.pack()
+nextcard_button.place(x=575, y=249)
 # flip card button
-button4 = tk.Button(window, text="Flip Card", font='Arial', command=flip_card)
-button4.pack()
-button4.place(x=275, y=300)
+flipcard_button = tk.Button(window, text="Flip Card", font='Arial', command=flip_card)
+flipcard_button.pack()
+flipcard_button.place(x=275, y=300)
 # delete card button
-button5 = tk.Button(window, text="Delete Card", font='Arial', command=delete_card)
-button5.pack()
-button5.place(x=425, y=300)
+deletecard_button = tk.Button(window, text="Delete Card", font='Arial', command=delete_card)
+deletecard_button.pack()
+deletecard_button.place(x=425, y=300)
 
 window.mainloop()
