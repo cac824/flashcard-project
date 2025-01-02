@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import random
 
 window = tk.Tk()
 
@@ -12,7 +13,7 @@ flashcard_back = []  # holds all elements for the back of flashcard
 
 
 def enable_button(button_name):
-    if len(flashcard_front) >= 1:
+    if len(flashcard_front) >= 0:
         button_name.config(state=tk.NORMAL)
 
 
@@ -29,12 +30,39 @@ def update_label():
         label2.config(text="No Cards Available")
 
 
-def error(text):  # function that makes error messages
-    error_window = tk.Tk()
-    error_window.geometry("300x300")
-    error_window.title("Error")
-    error_label = tk.Label(error_window, text=text, font='Arial')
-    error_label.pack()
+def menu():
+    menu_window = tk.Tk()
+    menu_window.geometry("300x300")
+    menu_window.title("Menu")
+
+    def color_change():
+        colors_list = [
+            "White", "Black", "Red", "Green", "Blue", "Cyan",
+            "Yellow", "Magenta", "Gray", "LightGray", "DarkGray",
+            "Brown", "Orange", "Pink", "Purple", "Violet",
+            "Gold", "Silver", "LightBlue", "Maroon"
+        ]
+        color_name = random.choice(colors_list)
+        window.config(bg=color_name)
+
+    def settings():
+        menu_window.destroy()
+        settings_window = tk.Tk()
+        settings_window.geometry("300x300")
+        settings_window.title("Settings")
+        color_button = tk.Button(settings_window, text="Background Color", font='Arial', command=color_change)
+        color_button.pack()
+
+    settings_button = tk.Button(menu_window, text="Settings", font='Arial', command=settings)
+    settings_button.pack()
+
+
+def message(title, text):  # function that makes message messages
+    message_window = tk.Tk()
+    message_window.geometry("300x300")
+    message_window.title(title)
+    message_label = tk.Label(message_window, text=text, font='Arial')
+    message_label.pack()
 
 
 def new_flashcard():  # function that makes a new card
@@ -67,7 +95,7 @@ def new_flashcard():  # function that makes a new card
                 flashcard_back.append(definition)
             update_label()
         else:
-            error("Both entries need to be filled out")
+            message("Error", "Both entries need to be filled out")
         term_entry.delete(0, tk.END)  # clears the entries after all are filled out and submitted
         definition_entry.delete(0, tk.END)
         num_label.config(text="{}/{}".format(count + 1, len(flashcard_front)))
@@ -132,7 +160,7 @@ def delete_card():
         label2.config(text=flashcard_front[count])
         num_label.config(text="{}/{}".format(count + 1, len(flashcard_front)))
     else:
-        error("There are no cards to delete")
+        message("Error", "There are no cards to delete")
 
 
 # sets up the window
@@ -142,7 +170,7 @@ window.title("Flashcard")
 label1 = ttk.Label(window, text="Flashcards", font='Arial')
 label1.pack()
 # creates label showing what card you're on
-num_label = tk.Label(window, text="{}/{}".format(count + 1, len(flashcard_front)))
+num_label = tk.Label(window, text="{}/{}".format(count, len(flashcard_front)))
 num_label.pack()
 # creates the flashcard
 card_frame = tk.Frame(window, bg="white", width=500, height=300)
@@ -169,5 +197,9 @@ flipcard_button.place(x=275, y=300)
 deletecard_button = tk.Button(window, text="Delete Card", font='Arial', command=delete_card)
 deletecard_button.pack()
 deletecard_button.place(x=425, y=300)
+# menu button
+menu_button = tk.Button(window, text="Menu", font='Arial', command=menu)
+menu_button.pack()
+menu_button.place(x=10, y=10)
 
 window.mainloop()
