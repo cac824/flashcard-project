@@ -11,6 +11,10 @@ first_card_replaced = False
 flashcard_front = []  # holds all elements for the front of flashcard
 flashcard_back = []  # holds all elements for the back of flashcard
 
+# default settings for GUI
+color = "systembuttonface"
+font = "Arial"
+
 
 def enable_button(button_name):
     if len(flashcard_front) >= 0:
@@ -30,6 +34,14 @@ def update_label():
         label2.config(text="No Cards Available")
 
 
+def message(title, text):  # function that makes message messages
+    message_window = tk.Tk()
+    message_window.geometry("300x300")
+    message_window.title(title)
+    message_label = tk.Label(message_window, text=text, font='Arial')
+    message_label.pack()
+
+
 def menu():
     menu_window = tk.Tk()
     menu_window.geometry("300x300")
@@ -42,8 +54,42 @@ def menu():
             "Brown", "Orange", "Pink", "Purple", "Violet",
             "Gold", "Silver", "LightBlue", "Maroon"
         ]
-        color_name = random.choice(colors_list)
-        window.config(bg=color_name)
+        generated_color = random.choice(colors_list)
+        window.config(bg=generated_color)
+
+    def dark_mode():
+        global color
+        window.config(bg="gray16")
+        color = "gray54"
+        button.config(bg=color)
+        flipcard_button.config(bg=color)
+        nextcard_button.config(bg=color)
+        prevcard_button.config(bg=color)
+        deletecard_button.config(bg=color)
+        menu_button.config(bg=color)
+        label1.config(background=color)
+        num_label.config(background=color)
+        card_frame.config(background=color)
+        label2.config(background=color)
+
+    def change_fonts():
+        global font
+        fonts_list = [
+            "times", "timesbold", "timesitalic", "helvetica",
+            "courier", "arial", "symbol", "helveticaneue",
+            "lucidaconsole", "monaco", "fixedsys"
+        ]
+        font = random.choice(fonts_list)
+        button.config(font=font)
+        flipcard_button.config(font=font)
+        nextcard_button.config(font=font)
+        prevcard_button.config(font=font)
+        deletecard_button.config(font=font)
+        menu_button.config(font=font)
+        label1.config(font=font)
+        num_label.config(font=font)
+        label2.config(font=font)
+
 
     def settings():
         menu_window.destroy()
@@ -52,17 +98,13 @@ def menu():
         settings_window.title("Settings")
         color_button = tk.Button(settings_window, text="Background Color", font='Arial', command=color_change)
         color_button.pack()
+        darkmode_button = tk.Button(settings_window, text="Dark Mode", font=font, command=dark_mode)
+        darkmode_button.pack()
+        font_button = tk.Button(settings_window, text="Change Font", font=font, command=change_fonts)
+        font_button.pack()
 
     settings_button = tk.Button(menu_window, text="Settings", font='Arial', command=settings)
     settings_button.pack()
-
-
-def message(title, text):  # function that makes message messages
-    message_window = tk.Tk()
-    message_window.geometry("300x300")
-    message_window.title(title)
-    message_label = tk.Label(message_window, text=text, font='Arial')
-    message_label.pack()
 
 
 def new_flashcard():  # function that makes a new card
@@ -176,29 +218,29 @@ num_label.pack()
 card_frame = tk.Frame(window, bg="white", width=500, height=300)
 card_frame.pack(pady=20, padx=20)
 # words that go on the flashcard
-label2 = tk.Label(card_frame, text="No Cards Available", bg="white", font=('Arial', "25"))
+label2 = tk.Label(card_frame, text="No Cards Available", bg="white", font=(font, "25"))
 label2.pack(pady=50, padx=50)
 # new flashcard button
-button = tk.Button(window, text="New Flashcard", font='Arial', command=new_flashcard)
+button = tk.Button(window, text="New Flashcard", font=font, bg=color, command=new_flashcard)
 button.pack()
 # previous card button
-prevcard_button = tk.Button(window, text="Previous Card", font='Arial', command=prev_card)
+prevcard_button = tk.Button(window, text="Previous Card", font=font, bg=color, command=prev_card)
 prevcard_button.pack()
 prevcard_button.place(x=100, y=249)
 # next card button
-nextcard_button = tk.Button(window, text="Next Card", font='Arial', command=next_card)
+nextcard_button = tk.Button(window, text="Next Card", font=font, bg=color, command=next_card)
 nextcard_button.pack()
 nextcard_button.place(x=575, y=249)
 # flip card button
-flipcard_button = tk.Button(window, text="Flip Card", font='Arial', command=flip_card)
+flipcard_button = tk.Button(window, text="Flip Card", font=font, bg=color, command=flip_card)
 flipcard_button.pack()
 flipcard_button.place(x=275, y=300)
 # delete card button
-deletecard_button = tk.Button(window, text="Delete Card", font='Arial', command=delete_card)
+deletecard_button = tk.Button(window, text="Delete Card", font=font, bg=color, command=delete_card)
 deletecard_button.pack()
 deletecard_button.place(x=425, y=300)
 # menu button
-menu_button = tk.Button(window, text="Menu", font='Arial', command=menu)
+menu_button = tk.Button(window, text="Menu", font='Arial', bg=color, command=menu)
 menu_button.pack()
 menu_button.place(x=10, y=10)
 
