@@ -6,13 +6,12 @@ window = tk.Tk()
 
 count = 0
 is_flipped = False
-first_card_replaced = False
 
 flashcard_front = []  # holds all elements for the front of flashcard
 flashcard_back = []  # holds all elements for the back of flashcard
 
 # default settings for GUI
-color = "systembuttonface"
+button_color = "systembuttonface"
 font = "Arial"
 
 
@@ -34,7 +33,7 @@ def update_label():
         label2.config(text="No Cards Available")
 
 
-def message(title, text):  # function that makes message messages
+def message(title, text):  # function that makes messages
     message_window = tk.Tk()
     message_window.geometry("300x300")
     message_window.title(title)
@@ -47,36 +46,51 @@ def menu():
     menu_window.geometry("300x300")
     menu_window.title("Menu")
 
+    def back():
+        menu_window.destroy()
+
     def color_change():
+        global button_color
         colors_list = [
             "White", "Black", "Red", "Green", "Blue", "Cyan",
             "Yellow", "Magenta", "Gray", "LightGray", "DarkGray",
             "Brown", "Orange", "Pink", "Purple", "Violet",
             "Gold", "Silver", "LightBlue", "Maroon"
         ]
+        button_color = "systembuttonface"
         generated_color = random.choice(colors_list)
         window.config(bg=generated_color)
+        button.config(bg=button_color)
+        flipcard_button.config(bg=button_color)
+        nextcard_button.config(bg=button_color)
+        prevcard_button.config(bg=button_color)
+        deletecard_button.config(bg=button_color)
+        menu_button.config(bg=button_color)
+        label1.config(background=button_color)
+        num_label.config(background=button_color)
+        card_frame.config(background=button_color)
+        label2.config(background=button_color)
 
     def dark_mode():
-        global color
+        global button_color
         window.config(bg="gray16")
-        color = "gray54"
-        button.config(bg=color)
-        flipcard_button.config(bg=color)
-        nextcard_button.config(bg=color)
-        prevcard_button.config(bg=color)
-        deletecard_button.config(bg=color)
-        menu_button.config(bg=color)
-        label1.config(background=color)
-        num_label.config(background=color)
-        card_frame.config(background=color)
-        label2.config(background=color)
+        button_color = "gray54"
+        button.config(bg=button_color)
+        flipcard_button.config(bg=button_color)
+        nextcard_button.config(bg=button_color)
+        prevcard_button.config(bg=button_color)
+        deletecard_button.config(bg=button_color)
+        menu_button.config(bg=button_color)
+        label1.config(background=button_color)
+        num_label.config(background=button_color)
+        card_frame.config(background=button_color)
+        label2.config(background=button_color)
 
     def change_fonts():
         global font
         fonts_list = [
-            "times", "timesbold", "timesitalic", "helvetica",
-            "courier", "arial", "symbol", "helveticaneue",
+            "times", "timesbold", "timesitalic",
+            "courier", "arial", "symbol",
             "lucidaconsole", "monaco", "fixedsys"
         ]
         font = random.choice(fonts_list)
@@ -89,7 +103,6 @@ def menu():
         label1.config(font=font)
         num_label.config(font=font)
         label2.config(font=font)
-
 
     def settings():
         menu_window.destroy()
@@ -105,6 +118,9 @@ def menu():
 
     settings_button = tk.Button(menu_window, text="Settings", font='Arial', command=settings)
     settings_button.pack()
+    back_button = tk.Button(menu_window, text="Back", font='Arial', command=back)
+    back_button.pack()
+    back_button.place(x=120, y=250)
 
 
 def new_flashcard():  # function that makes a new card
@@ -125,7 +141,6 @@ def new_flashcard():  # function that makes a new card
     definition_entry.pack()
 
     def add_flashcard():  # nested function that adds a new card
-        global first_card_replaced
         term = term_entry.get()
         definition = definition_entry.get()
         if term and definition:  # checks if term and definiton are filled out
@@ -221,26 +236,26 @@ card_frame.pack(pady=20, padx=20)
 label2 = tk.Label(card_frame, text="No Cards Available", bg="white", font=(font, "25"))
 label2.pack(pady=50, padx=50)
 # new flashcard button
-button = tk.Button(window, text="New Flashcard", font=font, bg=color, command=new_flashcard)
+button = tk.Button(window, text="New Flashcard", font=font, bg=button_color, command=new_flashcard)
 button.pack()
 # previous card button
-prevcard_button = tk.Button(window, text="Previous Card", font=font, bg=color, command=prev_card)
+prevcard_button = tk.Button(window, text="Previous Card", font=font, bg=button_color, command=prev_card)
 prevcard_button.pack()
 prevcard_button.place(x=100, y=249)
 # next card button
-nextcard_button = tk.Button(window, text="Next Card", font=font, bg=color, command=next_card)
+nextcard_button = tk.Button(window, text="Next Card", font=font, bg=button_color, command=next_card)
 nextcard_button.pack()
 nextcard_button.place(x=575, y=249)
 # flip card button
-flipcard_button = tk.Button(window, text="Flip Card", font=font, bg=color, command=flip_card)
+flipcard_button = tk.Button(window, text="Flip Card", font=font, bg=button_color, command=flip_card)
 flipcard_button.pack()
 flipcard_button.place(x=275, y=300)
 # delete card button
-deletecard_button = tk.Button(window, text="Delete Card", font=font, bg=color, command=delete_card)
+deletecard_button = tk.Button(window, text="Delete Card", font=font, bg=button_color, command=delete_card)
 deletecard_button.pack()
 deletecard_button.place(x=425, y=300)
 # menu button
-menu_button = tk.Button(window, text="Menu", font='Arial', bg=color, command=menu)
+menu_button = tk.Button(window, text="Menu", font='Arial', bg=button_color, command=menu)
 menu_button.pack()
 menu_button.place(x=10, y=10)
 
