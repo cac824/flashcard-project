@@ -13,6 +13,8 @@ A Python program that helps people study by using flashcards using Tkinter to ma
 
 * Progress bar: Displays your current position in the set (Ex: 1/5)
 
+* Customization: Ability to change fonts, background, and button colors and dark mode
+
 
 **Libraries used:**
   Tkinter
