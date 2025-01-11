@@ -5,10 +5,16 @@ import random
 window = tk.Tk()
 
 count = 0
+correct_answer = 0
+question_count = 0
 is_flipped = False
+window_destroyed = False
 
 flashcard_front = []  # holds all elements for the front of flashcard
 flashcard_back = []  # holds all elements for the back of flashcard
+
+quiz_dict = {}
+question_number = f"question{len(quiz_dict) + 1}"  # updates the quiz number each time
 
 # default settings for GUI
 button_color = "systembuttonface"
@@ -39,6 +45,51 @@ def message(title, text):  # function that makes messages
     message_window.title(title)
     message_label = tk.Label(message_window, text=text, font='Arial')
     message_label.pack()
+
+
+def open_quiz():
+    first_key = list(quiz_dict.keys())[0]
+    choice_index = 0
+
+    def check_answer(choice):
+        global question_count, correct_answer
+        if question_count < len(quiz_dict):
+            if choice == quiz_dict[first_key]["Answer"]:
+                correct_answer += 1
+            question_count += 1
+        else:
+            question_label.config(text="Score {}/{}".format(correct_answer, len(quiz_dict)))
+
+    def answer_choice1():
+        check_answer(quiz_dict[first_key]["Choices"][0])
+
+    def answer_choice2():
+        check_answer(quiz_dict[first_key]["Choices"][1])
+
+    def answer_choice3():
+        check_answer(quiz_dict[first_key]["Choices"][2])
+
+    def answer_choice4():
+        check_answer(quiz_dict[first_key]["Choices"][3])
+
+    # creates the window
+    quiz_window = tk.Tk()
+    quiz_window.geometry("300x300")
+    quiz_window.title("Quiz")
+    # creates the label for the questions
+    question_frame = tk.Frame(quiz_window, bg="white", width=250, height=250)
+    question_frame.pack()
+    question_label = tk.Label(question_frame, text=quiz_dict[first_key]["Question"], bg="white", font=(font, "15"))
+    question_label.pack(pady=50, padx=50)
+    # creates all the multiple choice buttons
+    choice1_button = tk.Button(quiz_window, text=quiz_dict[first_key]["Choices"][choice_index], width=10, command=answer_choice1)
+    choice1_button.pack()
+    choice2_button = tk.Button(quiz_window, text=quiz_dict[first_key]["Choices"][choice_index + 1], width=10, command=answer_choice2)
+    choice2_button.pack()
+    choice3_button = tk.Button(quiz_window, text=quiz_dict[first_key]["Choices"][choice_index + 2], width=10, command=answer_choice3)
+    choice3_button.pack()
+    choice4_button = tk.Button(quiz_window, text=quiz_dict[first_key]["Choices"][choice_index + 3], width=10, command=answer_choice4)
+    choice4_button.pack()
 
 
 def menu():
@@ -116,8 +167,71 @@ def menu():
         font_button = tk.Button(settings_window, text="Change Font", font=font, command=change_fonts)
         font_button.pack()
 
+    def quiz():
+        menu_window.destroy()
+        makequiz_window = tk.Tk()
+        makequiz_window.geometry("300x300")
+        makequiz_window.title("Quiz")
+        # tells the user where to enter the question
+        question_label = tk.Label(makequiz_window, text="Enter Question")
+        question_label.pack()
+        question_entry = tk.Entry(makequiz_window)
+        question_entry.pack()
+        # tells the user where to enter the first choice
+        choice1_label = tk.Label(makequiz_window, text="Enter Choice 1\n(Correct Answer)")
+        choice1_label.pack()
+        choice1_entry = tk.Entry(makequiz_window)
+        choice1_entry.pack()
+        # tells the user where to enter the second choice
+        choice2_label = tk.Label(makequiz_window, text="Enter Choice 2")
+        choice2_label.pack()
+        choice2_entry = tk.Entry(makequiz_window)
+        choice2_entry.pack()
+        # tells the user where to enter the third choice
+        choice3_label = tk.Label(makequiz_window, text="Enter Choice 3")
+        choice3_label.pack()
+        choice3_entry = tk.Entry(makequiz_window)
+        choice3_entry.pack()
+        # tells the user where to enter the fourth choice
+        choice4_label = tk.Label(makequiz_window, text="Enter Choice 4")
+        choice4_label.pack()
+        choice4_entry = tk.Entry(makequiz_window)
+        choice4_entry.pack()
+
+        def add_question():  # nested function to add a question
+            global window_destroyed
+            question = question_entry.get()
+            choice1 = choice1_entry.get()
+            choice2 = choice2_entry.get()
+            choice3 = choice3_entry.get()
+            choice4 = choice4_entry.get()
+
+            if question and choice1 and choice2 and choice3 and choice4:  # checks if all entries are filled out
+                quiz_dict[question_number] = {  # updates the quiz_dict each time
+                    "Question": question,
+                    "Choices": [choice1, choice2, choice3, choice4],
+                    "Answer": choice1
+                }
+            else:
+                message("Error", "All entries must be filled")
+            question_entry.delete(0, tk.END)
+            choice1_entry.delete(0, tk.END)
+            choice2_entry.delete(0, tk.END)
+            choice3_entry.delete(0, tk.END)
+            choice4_entry.delete(0, tk.END)
+            if not window_destroyed:
+                window.destroy()
+                window_destroyed = True
+                open_quiz()
+
+        # this button makes the quiz
+        addquestion_button = tk.Button(makequiz_window, text="Add Question", command=add_question)
+        addquestion_button.pack()
+
     settings_button = tk.Button(menu_window, text="Settings", font='Arial', command=settings)
     settings_button.pack()
+    quiz_button = tk.Button(menu_window, text="Make A Quiz", font='Arial', command=quiz)
+    quiz_button.pack()
     back_button = tk.Button(menu_window, text="Back", font='Arial', command=back)
     back_button.pack()
     back_button.place(x=120, y=250)
@@ -260,3 +374,6 @@ menu_button.pack()
 menu_button.place(x=10, y=10)
 
 window.mainloop()
+
+
+
