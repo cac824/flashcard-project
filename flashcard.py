@@ -50,8 +50,8 @@ def message(title, text):  # function that makes messages
 def open_quiz():
     global question_count
 
-    def update_question():
-        if question_count < len(quiz_dict):
+    def update_question():  # function updates the question label and choice buttons
+        if question_count < len(quiz_dict):  # checks if the question count is less than the length of quiz dict
             current_key = list(quiz_dict.keys())[question_count]
             question_label.config(text=quiz_dict[current_key]["Question"])
             choice1_button.config(text=quiz_dict[current_key]["Choices"][0])
@@ -64,9 +64,9 @@ def open_quiz():
     def check_answer(choice):
         global question_count, correct_answer
 
-        if question_count < len(quiz_dict):
+        if question_count < len(quiz_dict):  # checks if the question count is less than the length of quiz dict
             first_key = list(quiz_dict.keys())[question_count]
-            if choice == quiz_dict[first_key]["Answer"]:
+            if choice == quiz_dict[first_key]["Answer"]:  # checks if the user's choice is correct
                 correct_answer += 1
             question_label.config(text=quiz_dict[first_key]["Question"])
             question_count += 1
@@ -108,15 +108,16 @@ def open_quiz():
 
     update_question()
 
+
 def menu():
-    menu_window = tk.Tk()
+    menu_window = tk.Tk()  # creates menu window that holds any customization and quizzes
     menu_window.geometry("300x300")
     menu_window.title("Menu")
 
     def back():
         menu_window.destroy()
 
-    def color_change():
+    def color_change():  # updates the colors of all the buttons and background
         global button_color
         colors_list = [
             "White", "Black", "Red", "Green", "Blue", "Cyan",
@@ -138,7 +139,7 @@ def menu():
         card_frame.config(background=button_color)
         label2.config(background=button_color)
 
-    def dark_mode():
+    def dark_mode():  # makes the background and buttons suitable for dark areas
         global button_color
         window.config(bg="gray16")
         button_color = "gray54"
@@ -153,7 +154,7 @@ def menu():
         card_frame.config(background=button_color)
         label2.config(background=button_color)
 
-    def change_fonts():
+    def change_fonts():  # changes the fonts
         global font
         fonts_list = [
             "times", "timesbold", "timesitalic",
