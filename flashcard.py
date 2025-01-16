@@ -14,7 +14,7 @@ flashcard_front = []  # holds all elements for the front of flashcard
 flashcard_back = []  # holds all elements for the back of flashcard
 
 quiz_dict = {}
-question_number = f"question{len(quiz_dict) + 1}"  # updates the quiz number each time
+question_number = 0
 
 # default settings for GUI
 button_color = "systembuttonface"
@@ -48,29 +48,44 @@ def message(title, text):  # function that makes messages
 
 
 def open_quiz():
-    first_key = list(quiz_dict.keys())[0]
-    choice_index = 0
+    global question_count
+
+    def update_question():
+        if question_count < len(quiz_dict):
+            current_key = list(quiz_dict.keys())[question_count]
+            question_label.config(text=quiz_dict[current_key]["Question"])
+            choice1_button.config(text=quiz_dict[current_key]["Choices"][0])
+            choice2_button.config(text=quiz_dict[current_key]["Choices"][1])
+            choice3_button.config(text=quiz_dict[current_key]["Choices"][2])
+            choice4_button.config(text=quiz_dict[current_key]["Choices"][3])
+        else:
+            question_label.config(text="Score {}/{}".format(correct_answer, len(quiz_dict)))
 
     def check_answer(choice):
         global question_count, correct_answer
+
         if question_count < len(quiz_dict):
+            first_key = list(quiz_dict.keys())[question_count]
             if choice == quiz_dict[first_key]["Answer"]:
                 correct_answer += 1
+            question_label.config(text=quiz_dict[first_key]["Question"])
             question_count += 1
+            update_question()
+
         else:
             question_label.config(text="Score {}/{}".format(correct_answer, len(quiz_dict)))
 
     def answer_choice1():
-        check_answer(quiz_dict[first_key]["Choices"][0])
+        check_answer(quiz_dict[list(quiz_dict.keys())[question_count]]["Choices"][0])
 
     def answer_choice2():
-        check_answer(quiz_dict[first_key]["Choices"][1])
+        check_answer(quiz_dict[list(quiz_dict.keys())[question_count]]["Choices"][1])
 
     def answer_choice3():
-        check_answer(quiz_dict[first_key]["Choices"][2])
+        check_answer(quiz_dict[list(quiz_dict.keys())[question_count]]["Choices"][2])
 
     def answer_choice4():
-        check_answer(quiz_dict[first_key]["Choices"][3])
+        check_answer(quiz_dict[list(quiz_dict.keys())[question_count]]["Choices"][3])
 
     # creates the window
     quiz_window = tk.Tk()
@@ -79,18 +94,19 @@ def open_quiz():
     # creates the label for the questions
     question_frame = tk.Frame(quiz_window, bg="white", width=250, height=250)
     question_frame.pack()
-    question_label = tk.Label(question_frame, text=quiz_dict[first_key]["Question"], bg="white", font=(font, "15"))
+    question_label = tk.Label(question_frame, text="", bg="white", font=(font, "15"))
     question_label.pack(pady=50, padx=50)
     # creates all the multiple choice buttons
-    choice1_button = tk.Button(quiz_window, text=quiz_dict[first_key]["Choices"][choice_index], width=10, command=answer_choice1)
+    choice1_button = tk.Button(quiz_window, text="", width=10, command=answer_choice1)
     choice1_button.pack()
-    choice2_button = tk.Button(quiz_window, text=quiz_dict[first_key]["Choices"][choice_index + 1], width=10, command=answer_choice2)
+    choice2_button = tk.Button(quiz_window, text="", width=10, command=answer_choice2)
     choice2_button.pack()
-    choice3_button = tk.Button(quiz_window, text=quiz_dict[first_key]["Choices"][choice_index + 2], width=10, command=answer_choice3)
+    choice3_button = tk.Button(quiz_window, text="", width=10, command=answer_choice3)
     choice3_button.pack()
-    choice4_button = tk.Button(quiz_window, text=quiz_dict[first_key]["Choices"][choice_index + 3], width=10, command=answer_choice4)
+    choice4_button = tk.Button(quiz_window, text="", width=10, command=answer_choice4)
     choice4_button.pack()
 
+    update_question()
 
 def menu():
     menu_window = tk.Tk()
@@ -199,7 +215,7 @@ def menu():
         choice4_entry.pack()
 
         def add_question():  # nested function to add a question
-            global window_destroyed
+            global window_destroyed, question_number
             question = question_entry.get()
             choice1 = choice1_entry.get()
             choice2 = choice2_entry.get()
@@ -207,6 +223,7 @@ def menu():
             choice4 = choice4_entry.get()
 
             if question and choice1 and choice2 and choice3 and choice4:  # checks if all entries are filled out
+                question_number += 1
                 quiz_dict[question_number] = {  # updates the quiz_dict each time
                     "Question": question,
                     "Choices": [choice1, choice2, choice3, choice4],
@@ -214,11 +231,14 @@ def menu():
                 }
             else:
                 message("Error", "All entries must be filled")
+
             question_entry.delete(0, tk.END)
             choice1_entry.delete(0, tk.END)
             choice2_entry.delete(0, tk.END)
             choice3_entry.delete(0, tk.END)
             choice4_entry.delete(0, tk.END)
+            print(quiz_dict)
+            print(len(list(quiz_dict)))
             if not window_destroyed:
                 window.destroy()
                 window_destroyed = True
@@ -374,6 +394,3 @@ menu_button.pack()
 menu_button.place(x=10, y=10)
 
 window.mainloop()
-
-
-
