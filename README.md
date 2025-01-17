@@ -25,7 +25,7 @@ A Python program that helps people study by using flashcards using Tkinter to ma
 
 **Currently Working On**
 
- * Fixing a bug where you have to press the answer twice on the last question for the score to appear
+ * Adding the ability to save and load flashcard sets
 
 **Future Improvements:**
 * Rework the deleting system and have the sets automatically update when deleting (Complete)
